@@ -193,12 +193,7 @@ export default function Tagorhythm() {
               <h1 style={{ fontFamily:"'Outfit',sans-serif", fontSize:36, fontWeight:800, color:"#fff", letterSpacing:"-.03em", lineHeight:1, margin:0 }}>Tagorhythm</h1>
               <div style={{ fontFamily:"'Hind Siliguri',sans-serif", fontSize:15, color:"rgba(255,255,255,0.75)", fontWeight:500, marginTop:3 }}>কথায় কথায় কবিগুরু</div>
             </div>
-            <div style={{
-              fontFamily:"'Outfit',sans-serif", fontSize:18, fontWeight:800,
-              color:"#fff", letterSpacing:"-.04em", marginTop:4,
-              background:"rgba(255,255,255,0.15)", borderRadius:8,
-              padding:"4px 10px", flexShrink:0
-            }}>hoichoi</div>
+            <img src="/hoichoi-logo.png" alt="hoichoi" style={{ height:22, width:"auto", marginTop:4, flexShrink:0, mixBlendMode:"screen" }} />
           </div>
         </header>
 
