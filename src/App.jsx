@@ -1,38 +1,38 @@
 import { useState, useRef, useEffect } from "react";
 
 const WORDS = [
-  { id:1,  word:"ADULTING",                  bn:"বয়েস বাড়ছে",                      def:"ঘর মোছা, ঘর ধোয়া, EMI দেওয়া। স্বপ্নগুলো পরে হবে।",                                                                                        song:"amar-e-ghar" },
-  { id:2,  word:"ANXIETY",                   bn:"হৃদপিন্ড কম্পমান",                  def:"দিন-দুপুরে হঠাৎ কান্না। কারণ নেই। থাকলেও বলা যাচ্ছে না। Robi Thakur felt it too, you're just late.",                                      song:"amar-kajer-majhe" },
+  { id:1,  word:"ADULTING",                  bn:"বয়স বাড়ছে",                       def:"ঘর মোছা, ঘর ধোয়া, EMI দেওয়া। স্বপ্নগুলো পরে হবে।",                                                                                        song:"amar-e-ghar" },
+  { id:2,  word:"ANXIETY",                   bn:"হৃদপিণ্ড কম্পমান",                  def:"দিন-দুপুরে হঠাৎ কান্না। কারণ নেই। থাকলেও বলা যাচ্ছে না। Robi Thakur felt it too, you're just late!",                                      song:"amar-kajer-majhe" },
   { id:3,  word:"BREADCRUMBING",             bn:"ঝুলিয়ে রাখা",                      def:"মাঝে মাঝে দেখা দেয়, সবসময় দেয় না। হঠাৎ আসে, hype তোলে, পালিয়ে যায়!",                                                                   song:"majhe-majhe-tabo-dekha-pai" },
-  { id:4,  word:"CONSTANT",                  bn:"চুপচাপ কিন্তু চিরকাল থেকে যাওয়া", def:"এক cup চা থেকে এক থালা ভাত, শুধু তোমাকেই চাই",                                                                                            song:"tumi-robe-nirobe" },
-  { id:5,  word:"DELUSION",                  bn:"যা ইচ্ছা তাই ভাবা",                def:"কিছু হবে না জানি, কিন্তু the heart wants what it wants",                                                                                    song:"amar-mon-mane-na" },
+  { id:4,  word:"CONSTANT",                  bn:"চুপচাপ কিন্তু চিরকাল থেকে যাওয়া", def:"এক cup চা থেকে এক থালা ভাত, শুধু তোমাকেই চাই!",                                                                                           song:"tumi-robe-nirobe" },
+  { id:5,  word:"DELUSION",                  bn:"যা ইচ্ছা তাই ভাবা",                def:"কিছু হবে না জানি, কিন্তু the heart wants what it wants!",                                                                                   song:"amar-mon-mane-na" },
   { id:6,  word:"DISOBEDIENT",               bn:"অবাধ্য",                           def:"যে কিছুই মানে না। Rules, parents, alarm clock, nothing!",                                                                                    song:"o-je-mane-na-mana" },
-  { id:7,  word:"EXTREMELY SELFLESS",        bn:"অতিরিক্ত নিঃস্বার্থপর",            def:"তোমার জন্য সব দিয়ে দেব - মন, মাথা, hoichoi-এর password, খাবারের last bite.",                                                              song:"kotobor-bhebechinu" },
-  { id:8,  word:"FOREBODING",                bn:"জানি খারাপ হবে",                   def:"সবই ভালো চলছে কিন্তু আমি জানি একটা খারাপ কিছু ঘটবেই!",                                                                                    song:"sorbonaasher-ashay" },
-  { id:9,  word:"FOMO",                      bn:"আমি কি বঞ্চিত?",                   def:"সবাই তোমাকে ছাড়া party করতে গেছে আর তুমি Instagram স্টোরি দেখছ। Tagore felt it too",                                                      song:"aaj-jyotsna-rate" },
-  { id:10, word:"GIRLY POP",                 bn:"মেয়েদের main character energy",    def:"বন্ধুরা একসাথে, full chaos, full adda, full performance mode on.",                                                                          song:"ay-tobe-sahachari" },
-  { id:11, word:"HONEYMOON PHASE",           bn:"প্রেমের প্রথম দিকটা",              def:"সব কিছুই এখন খুবই সুন্দর, কিন্তু real side-টা এখনো দেখোনি",                                                                              song:"he-sokha-mom-hridoye-roho" },
-  { id:12, word:"HUNG UP",                   bn:"আটকে থাকা",                       def:"সে চলে গেছে কিন্তু মন এখনো তাকেই খোঁজে।",                                                                                                  song:"ami-tarei-khuje-berai" },
-  { id:13, word:"INFATUATION",               bn:"ফুরফুরে প্রেমের আমেজ",             def:"তোমার মনে হতে পারে ভালোবাসা, but আসলে দুদিন পর কেটে যাবে!",                                                                              song:"khelaghor-bandhte-legechi" },
-  { id:14, word:"INCREMENT",                 bn:"সবার ভাগ্যে নেই যেটা",             def:"Salary বাড়ল! নাচো! কাল থেকে আবার একই কাজ, একটু বেশি টাকায়। Woohoo!",                                                                    song:"mawmo-chitte" },
-  { id:15, word:"INSOMNIA",                  bn:"ঘুম না হওয়া",                      def:"সবাই ঘুমিয়ে, আমার ঘুম হয়েনা। Culprit: phone, intrusive thoughts, এবং সেই 2019-এর embarrassing memory।",                                 song:"amar-ghoom-niyo-go" },
-  { id:17, word:"JINX",                      bn:"যেটা হতে গিয়েও হলোনা",             def:"যে গল্পটা পূর্ণ হওয়ার আগেই sadly অন্ধকার নেমে এল।",                                                                                      song:"jakhan-esechile-andhokare" },
-  { id:18, word:"KIND REQUEST",              bn:"ভদ্র মিনতি",                       def:"নিজে আর পারছিনা, এবার universe একটু help করুক please.",                                                                                     song:"notun-pran-dao-pransakha" },
-  { id:19, word:"LATE REALIZATION",          bn:"দেরিতে বোঝা",                      def:"সে এখানেই ছিল, দেখতে পাইনি। কারণ আমি তখন অন্য কারো Instagram profile দেখছিলাম।",                                                         song:"amar-hiyar-majhe" },
-  { id:20, word:"MUTTON CURRY",              bn:"বাঙালির ভালোবাসা",                 def:"এমন একটা জিনিস, যেটার লোভে পড়লে মানুষে করলা সেদ্ধও খেয়ে নেয়!",                                                                          song:"amaro-porano-jaha-chay" },
-  { id:21, word:"NOSTALGIA",                 bn:"পুরোনো দিনে পড়ে থাকা",            def:"সেই দিনগুলো... যখন school-এর পরে বিকেল বেলা খেলতে যেতাম, টাকা কমানোর চিন্তা ছিলোনা।",                                                  song:"purano-sei-diner-kotha" },
-  { id:22, word:"ONE-SIDED LOVE",            bn:"একতরফা প্রেম",                     def:`পথ নেই জানি, তবুও যাই। GPS বলছে "destination doesn't exist" - তবুও চলছি।`,                                                              song:"chena-shonar-kono-baire" },
-  { id:23, word:"OVERTHINKING",              bn:"বড্ড বেশি ভাবা",                   def:"ভেবে ভেবে নিজের শরীর খারাপ করা",                                                                                                            song:"sokhi-bhobona-kahare-bole" },
-  { id:24, word:"PLAIN FACTS",               bn:"নির্মম সত্যি",                     def:"যে সত্যিটা accept করতে ইচ্ছা করে না, কিন্তু সেটাই reality.",                                                                               song:"amar-din-furabe-kobe" },
-  { id:25, word:"RESIGNATION",               bn:"জীবনের শান্তি",                    def:`চলে যাব একদিন। পায়ের ছাপ থাকবে না। LinkedIn-এ "Open to Work" টা থেকে যাবে।`,                                                            song:"porbe-na-mor-payer-chihno" },
-  { id:26, word:"RIZZ",                      bn:"ঘ্যাম",                            def:"যদি কেউ না আসে, একা যাও — কিন্তু এভাবে যাও যে সবাই ফিরে তাকায়। That's rizz.",                                                            song:"ekla-cholo-re" },
-  { id:27, word:"SEEN-ZONE",                 bn:"heartbreak-এর থেকে কষ্টকর",       def:"তুমি দেখলে, তুমি খুশি থাকলে। আমি? ...আমিও fine। সব fine।",                                                                                 song:"tumi-khushi-thako" },
-  { id:28, word:"TRUST ISSUES",              bn:"মনে শান্তি নাই",                   def:"সবাই suspicious লাগে। Even when things are fine, brain says: 'something's off'.",                                                          song:"kichute-moner-majhe" },
-  { id:29, word:"UNDERSTOOD THE ASSIGNMENT", bn:"পুরো vibe ধরে ফেলেছে",             def:"যে exactly জানে কী করতে হবে, আর effortlessly সেটাই করে যায়.",                                                                            song:"shudhu-jaoa-asha" },
-  { id:30, word:"VIBE CHECK",                bn:"মনকে একটু ছাড়ো",                  def:"দায়িত্ব পরে হবে, আগে একটু carefree হয়ে বাঁচি.",                                                                                            song:"hare-rere-rere" },
-  { id:31, word:"WEIRD FLEX, BUT OK",        bn:"অদ্ভুত ঘ্যাম",                    def:"নিজের talent বা uniqueness এমন confidence দিয়ে দেখানো যে question করার উপায় নেই.",                                                        song:"ami-chini-go-chini-tomare" },
-  { id:32, word:"YAAS",                      bn:"চলো এবার",                         def:"No overthinking. No looking back. Full dramatic main character entry.",                                                                       song:"bhulibo-bhobona" },
-  { id:33, word:"ZONED OUT",                 bn:"মন উদাসী",                         def:"শরীর এখানে, মন অন্য dimension-এ ঘুরছে।",                                                                                                    song:"je-tore-pagol-bole" },
+  { id:7,  word:"EXTREMELY SELFLESS",        bn:"অতিরিক্ত নিঃস্বার্থপর",            def:"তোমার জন্য সব দিয়ে দেব — মন, মাথা, hoichoi-এর password, খাবারের last bite!",                                                             song:"kotobor-bhebechinu" },
+  { id:8,  word:"FOREBODING",                bn:"জানি খারাপ হবে",                   def:"সবই ভালো চলছে, কিন্তু আমি জানি একটা খারাপ কিছু ঘটবেই!",                                                                                   song:"sorbonaasher-ashay" },
+  { id:9,  word:"FOMO",                      bn:"আমি কি বঞ্চিত?",                   def:"সবাই তোমাকে ছাড়া party করতে গেছে আর তুমি Instagram স্টোরি দেখছ। Tagore felt it too!",                                                     song:"aaj-jyotsna-rate" },
+  { id:10, word:"GIRLY POP",                 bn:"মেয়েদের main character energy",    def:"বন্ধুরা একসাথে। Full chaos, full adda, full performance mode on!",                                                                          song:"ay-tobe-sahachari" },
+  { id:11, word:"HONEYMOON PHASE",           bn:"প্রেমের প্রথম দিকটা",              def:"সব কিছুই এখন খুবই সুন্দর, কিন্তু real side-টা এখনো দেখোনি!",                                                                             song:"he-sokha-mom-hridoye-roho" },
+  { id:12, word:"HUNG UP",                   bn:"আটকে থাকা",                       def:"সে চলে গেছে, কিন্তু মন এখনো তাকেই খোঁজে।",                                                                                                  song:"ami-tarei-khuje-berai" },
+  { id:13, word:"INFATUATION",               bn:"ফুরফুরে প্রেমের আমেজ",             def:"তোমার মনে হতে পারে ভালোবাসা, but আসলে দুদিন পর কেটে যাবে!",                                                                             song:"khelaghor-bandhte-legechi" },
+  { id:14, word:"INCREMENT",                 bn:"সবার ভাগ্যে নেই যেটা",             def:"Salary বাড়ল! নাচো! কাল থেকে আবার একই কাজ, একটু বেশি টাকায়। Woohoo!",                                                                   song:"mawmo-chitte" },
+  { id:15, word:"INSOMNIA",                  bn:"ঘুম না হওয়া",                      def:"সবাই ঘুমিয়ে, আমার ঘুম হয় না। Culprit: phone, intrusive thoughts, এবং সেই 2019-এর embarrassing memory!",                                song:"amar-ghoom-niyo-go" },
+  { id:17, word:"JINX",                      bn:"যেটা হতে গিয়েও হলো না",            def:"যে গল্পটা পূর্ণ হওয়ার আগেই sadly অন্ধকার নেমে এল।",                                                                                     song:"jakhan-esechile-andhokare" },
+  { id:18, word:"KIND REQUEST",              bn:"ভদ্র মিনতি",                       def:"নিজে আর পারছি না, এবার universe একটু help করুক please!",                                                                                    song:"notun-pran-dao-pransakha" },
+  { id:19, word:"LATE REALIZATION",          bn:"দেরিতে বোঝা",                      def:"সে এখানেই ছিল, দেখতে পাইনি। কারণ আমি তখন অন্য কারো Instagram profile দেখছিলাম!",                                                        song:"amar-hiyar-majhe" },
+  { id:20, word:"MUTTON CURRY",              bn:"বাঙালির ভালোবাসা",                 def:"এমন একটা জিনিস, যেটার লোভে পড়লে মানুষ করলা সেদ্ধও খেয়ে নেয়!",                                                                         song:"amaro-porano-jaha-chay" },
+  { id:21, word:"NOSTALGIA",                 bn:"পুরোনো দিনে পড়ে থাকা",            def:"সেই দিনগুলো... যখন school-এর পরে বিকেলবেলা খেলতে যেতাম, টাকা কমানোর চিন্তা ছিল না।",                                                 song:"purano-sei-diner-kotha" },
+  { id:22, word:"ONE-SIDED LOVE",            bn:"একতরফা প্রেম",                     def:`পথ নেই জানি, তবুও যাই। GPS বলছে "destination doesn't exist" — তবুও চলছি!`,                                                             song:"chena-shonar-kono-baire" },
+  { id:23, word:"OVERTHINKING",              bn:"বড্ড বেশি ভাবা",                   def:"ভেবে ভেবে নিজের শরীর খারাপ করা।",                                                                                                           song:"sokhi-bhobona-kahare-bole" },
+  { id:24, word:"PLAIN FACTS",               bn:"নির্মম সত্যি",                     def:"যে সত্যিটা accept করতে ইচ্ছা করে না, কিন্তু সেটাই reality!",                                                                              song:"amar-din-furabe-kobe" },
+  { id:25, word:"RESIGNATION",               bn:"জীবনের শান্তি",                    def:`চলে যাব একদিন। পায়ের ছাপ থাকবে না। LinkedIn-এ "Open to Work" টা থেকে যাবে।`,                                                           song:"porbe-na-mor-payer-chihno" },
+  { id:26, word:"RIZZ",                      bn:"ঘ্যাম",                            def:"যদি কেউ না আসে, একা যাও — কিন্তু এভাবে যাও যে সবাই ফিরে তাকায়। That's rizz!",                                                           song:"ekla-cholo-re" },
+  { id:27, word:"SEEN-ZONE",                 bn:"heartbreak-এর থেকে কষ্টকর",       def:"তুমি দেখলে, তুমি খুশি থাকলে। আমি?... আমিও fine। সব fine!",                                                                                song:"tumi-khushi-thako" },
+  { id:28, word:"TRUST ISSUES",              bn:"মনে শান্তি নাই",                   def:"সব কিছুই suspicious লাগে। Even when things are fine, brain says: 'something's off'!",                                                     song:"kichute-moner-majhe" },
+  { id:29, word:"UNDERSTOOD THE ASSIGNMENT", bn:"পুরো vibe ধরে ফেলেছে",             def:"যে exactly জানে কী করতে হবে, আর effortlessly সেটাই করে যায়!",                                                                           song:"shudhu-jaoa-asha" },
+  { id:30, word:"VIBE CHECK",                bn:"মনকে একটু ছাড়ো",                  def:"দায়িত্ব পরে হবে, আগে একটু carefree হয়ে বাঁচি!",                                                                                           song:"hare-rere-rere" },
+  { id:31, word:"WEIRD FLEX, BUT OK",        bn:"অদ্ভুত ঘ্যাম",                    def:"নিজের talent বা uniqueness এমন confidence দিয়ে দেখানো যে question করার উপায় নেই!",                                                       song:"ami-chini-go-chini-tomare" },
+  { id:32, word:"YAAS",                      bn:"চলো এবার",                         def:"No overthinking. No looking back. Full dramatic main character entry!",                                                                      song:"bhulibo-bhobona" },
+  { id:33, word:"ZONED OUT",                 bn:"মন উদাসী",                         def:"শরীর এখানে, মন অন্য dimension-এ ঘুরছে।",                                                                                                   song:"je-tore-pagol-bole" },
 ].sort((a, b) => a.word.localeCompare(b.word));
 
 const BASE_URL = "/audio/";
@@ -173,9 +173,10 @@ export default function Tagorhythm() {
             <h1 style={{ fontFamily:"'Outfit',sans-serif", fontSize:40, fontWeight:800, color:"#fff", letterSpacing:"-.03em", lineHeight:1, margin:0 }}>Tagorhythm</h1>
             <div style={{ fontFamily:"'Hind Siliguri',sans-serif", fontSize:16, color:"rgba(255,255,255,0.75)", fontWeight:500, marginTop:4 }}>কথায় কথায় কবিগুরু</div>
           </div>
-          <svg width="72" height="20" viewBox="0 0 220 55" style={{ marginTop:6 }}>
-            <text x="2" y="46" fontFamily="'Arial Black',Arial,sans-serif" fontSize="52" fontWeight="900" fill="white" letterSpacing="-1">hoichoi</text>
-          </svg>
+          <div style={{
+            fontFamily:"'Outfit',sans-serif", fontSize:18, fontWeight:900,
+            color:"#fff", letterSpacing:"-.03em", marginTop:6, opacity:.9
+          }}>hoichoi</div>
         </div>
         <p style={{ position:"relative", zIndex:1, fontFamily:"'Manrope',sans-serif", fontSize:12, color:"rgba(255,255,255,.5)", lineHeight:1.65, margin:0 }}>
           Because Tagore described every modern feeling 100 years before you had a word for it.
@@ -230,50 +231,38 @@ export default function Tagorhythm() {
       </main>
 
       {/* FOOTER */}
-      <footer style={{ background:GRAD, padding:"28px 20px 20px", position:"relative", overflow:"hidden" }}>
+      <footer style={{ background:GRAD, padding:"24px 20px 24px", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", top:-60, right:-60, width:200, height:200, borderRadius:"50%", background:"rgba(255,255,255,0.04)", pointerEvents:"none" }} />
         <div style={{ position:"absolute", bottom:-40, left:-20, width:160, height:160, borderRadius:"50%", background:"rgba(255,255,255,0.03)", pointerEvents:"none" }} />
-        <div style={{ position:"relative", zIndex:1 }}>
-          {/* Top row: logo | divider | find us on + icons + tagore */}
-          <div style={{ display:"flex", alignItems:"stretch", gap:20 }}>
-            {/* Left: Boldly Bangali logo */}
-            <div style={{ display:"flex", alignItems:"center", paddingRight:20 }}>
-              <img
+        <div style={{ position:"relative", zIndex:1, display:"flex", alignItems:"center", gap:20 }}>
+          {/* Left: Boldly Bangali logo */}
+          <div style={{ flexShrink:0 }}>
+            <img
                 src="/boldly-bangali.png"
                 alt="Boldly Bangali"
-                style={{ height:80, width:"auto", display:"block" }}
+                style={{ height:72, width:"auto", display:"block", mixBlendMode:"screen" }}
               />
-            </div>
-            {/* Vertical divider */}
-            <div style={{ width:1, background:"rgba(255,255,255,0.2)", flexShrink:0 }} />
-            {/* Right: find us on + icons + tagore */}
-            <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", gap:10, paddingLeft:4 }}>
-              <div style={{ fontFamily:"'PT Mono',monospace", fontSize:9, color:"rgba(255,255,255,0.5)", letterSpacing:".18em", textTransform:"uppercase" }}>Find us on</div>
-              <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
-                {[
-                  { href:"https://www.hoichoi.tv", title:"hoichoi", svg:<svg viewBox="0 0 24 24" width="18" height="18"><text x="3" y="20" fontFamily="Arial Black" fontSize="20" fontWeight="900" fill="white">h</text></svg> },
-                  { href:"https://www.instagram.com/hoichoi.tv/", title:"Instagram", svg:<svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> },
-                  { href:"https://www.facebook.com/hoichoitv", title:"Facebook", svg:<svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> },
-                  { href:"https://www.youtube.com/@hoichoi", title:"YouTube", svg:<svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> },
-                  { href:"https://x.com/hoichoitv", title:"X", svg:<svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg> },
-                ].map(({ href, title, svg }) => (
-                  <a key={title} href={href} target="_blank" rel="noreferrer" title={title} style={{
-                    display:"flex", alignItems:"center", justifyContent:"center",
-                    width:38, height:38, borderRadius:10,
-                    background:"rgba(255,255,255,0.13)", textDecoration:"none", flexShrink:0,
-                  }}>{svg}</a>
-                ))}
-              </div>
-              <div style={{ fontFamily:"'PT Mono',monospace", fontSize:9, color:"rgba(255,255,255,0.35)", letterSpacing:".05em" }}>
-                রবীন্দ্রনাথ ঠাকুর · 1861–1941
-              </div>
-            </div>
           </div>
-          {/* Bottom: subtitle full width */}
-          <div style={{ marginTop:16, paddingTop:14, borderTop:"1px solid rgba(255,255,255,0.12)" }}>
-            <span style={{ fontFamily:"'Manrope',sans-serif", fontSize:11, color:"rgba(255,255,255,0.4)" }}>
-              কথায় কথায় কবিগুরু · A hoichoi original experience
-            </span>
+          {/* Vertical divider */}
+          <div style={{ width:1, background:"rgba(255,255,255,0.2)", alignSelf:"stretch", flexShrink:0 }} />
+          {/* Right: find us on + icons */}
+          <div style={{ flex:1, display:"flex", flexDirection:"column", gap:10 }}>
+            <div style={{ fontFamily:"'PT Mono',monospace", fontSize:9, color:"rgba(255,255,255,0.5)", letterSpacing:".18em", textTransform:"uppercase" }}>Find us on</div>
+            <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
+              {[
+                { href:"https://www.hoichoi.tv", title:"hoichoi", svg:<svg viewBox="0 0 24 24" width="18" height="18"><text x="3" y="20" fontFamily="Arial Black" fontSize="20" fontWeight="900" fill="white">h</text></svg> },
+                { href:"https://www.instagram.com/hoichoi.tv/", title:"Instagram", svg:<svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> },
+                { href:"https://www.facebook.com/hoichoitv", title:"Facebook", svg:<svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> },
+                { href:"https://www.youtube.com/@hoichoi", title:"YouTube", svg:<svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> },
+                { href:"https://x.com/hoichoitv", title:"X", svg:<svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg> },
+              ].map(({ href, title, svg }) => (
+                <a key={title} href={href} target="_blank" rel="noreferrer" title={title} style={{
+                  display:"flex", alignItems:"center", justifyContent:"center",
+                  width:38, height:38, borderRadius:10,
+                  background:"rgba(255,255,255,0.13)", textDecoration:"none", flexShrink:0,
+                }}>{svg}</a>
+              ))}
+            </div>
           </div>
         </div>
       </footer>
