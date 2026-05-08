@@ -164,7 +164,7 @@ export default function Tagorhythm() {
       <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Manrope:wght@400;500;600&family=PT+Mono&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet" />
 
       {/* HEADER */}
-      <div style={{ position:"sticky", top:0, zIndex:30 }}>
+      <div className="sticky-header" style={{ position:"sticky", top:0, zIndex:30 }}>
       <header style={{ background:GRAD, padding:"24px 20px 28px", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", top:-60, right:-60, width:200, height:200, borderRadius:"50%", background:"rgba(255,255,255,0.05)", pointerEvents:"none" }} />
         <div style={{ position:"absolute", bottom:-40, left:"10%", width:150, height:150, borderRadius:"50%", background:"rgba(255,255,255,0.03)", pointerEvents:"none" }} />
@@ -197,7 +197,14 @@ export default function Tagorhythm() {
             <button
               key={l}
               id={"alpha-" + l}
-              onClick={() => groups[l] && document.getElementById("section-" + l)?.scrollIntoView({ behavior:"smooth", block:"start" })}
+              onClick={() => {
+                if (!groups[l]) return;
+                const el = document.getElementById("section-" + l);
+                if (!el) return;
+                const headerHeight = document.querySelector('.sticky-header')?.offsetHeight || 0;
+                const top = el.getBoundingClientRect().top + window.scrollY - headerHeight - 8;
+                window.scrollTo({ top, behavior: "smooth" });
+              }}
               style={{
                 display:"inline-flex", alignItems:"center", justifyContent:"center",
                 minWidth:34, height:40, padding:"0 3px",
