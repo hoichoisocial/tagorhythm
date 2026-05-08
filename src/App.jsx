@@ -164,7 +164,8 @@ export default function Tagorhythm() {
       <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Manrope:wght@400;500;600&family=PT+Mono&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet" />
 
       {/* HEADER */}
-      <header style={{ background:GRAD, padding:"24px 20px 28px", position:"sticky", top:0, zIndex:30, overflow:"hidden" }}>
+      <div style={{ position:"sticky", top:0, zIndex:30 }}>
+      <header style={{ background:GRAD, padding:"24px 20px 28px", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", top:-60, right:-60, width:200, height:200, borderRadius:"50%", background:"rgba(255,255,255,0.05)", pointerEvents:"none" }} />
         <div style={{ position:"absolute", bottom:-40, left:"10%", width:150, height:150, borderRadius:"50%", background:"rgba(255,255,255,0.03)", pointerEvents:"none" }} />
         <div style={{ position:"relative", zIndex:1, display:"flex", alignItems:"flex-start", justifyContent:"space-between", marginBottom:12 }}>
@@ -174,8 +175,10 @@ export default function Tagorhythm() {
             <div style={{ fontFamily:"'Hind Siliguri',sans-serif", fontSize:16, color:"rgba(255,255,255,0.75)", fontWeight:500, marginTop:4 }}>কথায় কথায় কবিগুরু</div>
           </div>
           <div style={{
-            fontFamily:"'Outfit',sans-serif", fontSize:18, fontWeight:900,
-            color:"#fff", letterSpacing:"-.03em", marginTop:6, opacity:.9
+            fontFamily:"'Outfit',sans-serif", fontSize:20, fontWeight:800,
+            color:"#fff", letterSpacing:"-.04em", marginTop:6,
+            background:"rgba(255,255,255,0.15)", borderRadius:8,
+            padding:"4px 10px"
           }}>hoichoi</div>
         </div>
         <p style={{ position:"relative", zIndex:1, fontFamily:"'Manrope',sans-serif", fontSize:12, color:"rgba(255,255,255,.5)", lineHeight:1.65, margin:0 }}>
@@ -185,7 +188,7 @@ export default function Tagorhythm() {
 
       {/* ALPHA NAV */}
       <div style={{
-        position:"sticky", top:"148px", zIndex:20, background:"#fff",
+        position:"sticky", top:0, zIndex:19, background:"#fff",
         borderBottom:"1px solid #f0f0f0", overflowX:"auto", whiteSpace:"nowrap",
         scrollbarWidth:"none", WebkitOverflowScrolling:"touch",
       }}>
@@ -208,6 +211,7 @@ export default function Tagorhythm() {
             >{l}</button>
           ))}
         </div>
+      </div>
       </div>
 
       {/* ENTRIES */}
