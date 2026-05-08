@@ -157,7 +157,7 @@ export default function Tagorhythm() {
     if (!activeLetter) return;
     const btn = document.getElementById("alpha-" + activeLetter);
     btn?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-  }, [activeLetter]);
+  }, [activeLetter, letters]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div style={{ background:"#fff", minHeight:"100vh", fontFamily:"'Manrope',sans-serif", maxWidth:480, margin:"0 auto" }}>
