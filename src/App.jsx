@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useRef, useEffect, useCallback } from "react";
 
 const WORDS = [
   { id:1,  word:"ADULTING",                  bn:"বয়স বাড়ছে",                       def:"ঘর মোছা, ঘর ধোয়া, EMI দেওয়া। স্বপ্নগুলো পরে হবে।",                                                                                        song:"amar-e-ghar" },
@@ -71,6 +72,7 @@ function Player({ wordId, song, activeId, onPlay, onStop, audioRef }) {
   }, [isPlaying, audioRef]);
 
   const seek = (e) => {
+    if (!trackRef.current) return;
     const rect = trackRef.current.getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
@@ -87,9 +89,9 @@ function Player({ wordId, song, activeId, onPlay, onStop, audioRef }) {
           background: GRAD, border:"none", cursor:"pointer",
           display:"flex", alignItems:"center", justifyContent:"center",
           boxShadow:"0 2px 8px rgba(210,8,32,0.3)", flexShrink:0,
-          transition:"transform .15s, opacity .15s",
+          transition:"opacity .15s",
         }}
-        onMouseEnter={e => e.currentTarget.style.opacity = ".85"}
+        onMouseEnter={e => e.currentTarget.style.opacity = ".8"}
         onMouseLeave={e => e.currentTarget.style.opacity = "1"}
       >
         {isPlaying ? <PauseIcon /> : <PlayIcon />}
@@ -116,8 +118,9 @@ function Player({ wordId, song, activeId, onPlay, onStop, audioRef }) {
 
 export default function Tagorhythm() {
   const [activeId, setActiveId] = useState(null);
-  const [activeLetter, setActiveLetter] = useState(null);
+  const [activeLetter, setActiveLetter] = useState("A");
   const audioRef = useRef(null);
+  const stickyRef = useRef(null);
   const groups = groupByLetter(WORDS);
   const letters = Object.keys(groups).sort();
 
@@ -135,96 +138,107 @@ export default function Tagorhythm() {
     setActiveId(null);
   };
 
-  useEffect(() => {
-    return () => { if (audioRef.current) audioRef.current.pause(); };
+  const scrollToLetter = useCallback((l) => {
+    const el = document.getElementById("section-" + l);
+    if (!el || !stickyRef.current) return;
+    const offset = stickyRef.current.offsetHeight;
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: "smooth" });
+    setActiveLetter(l);
   }, []);
 
+  // Update active letter on scroll
   useEffect(() => {
-    const observers = [];
-    letters.forEach(l => {
-      const el = document.getElementById("section-" + l);
-      if (!el) return;
-      const obs = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) setActiveLetter(l);
-      }, { threshold: 0.15, rootMargin: "-40px 0px 0px 0px" });
-      obs.observe(el);
-      observers.push(obs);
-    });
-    return () => observers.forEach(o => o.disconnect());
-  }, []);
+    const handleScroll = () => {
+      if (!stickyRef.current) return;
+      const offset = stickyRef.current.offsetHeight + 16;
+      for (let i = letters.length - 1; i >= 0; i--) {
+        const el = document.getElementById("section-" + letters[i]);
+        if (el && el.getBoundingClientRect().top <= offset) {
+          setActiveLetter(letters[i]);
+          return;
+        }
+      }
+      setActiveLetter(letters[0]);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [letters]);
 
+  // Scroll active letter button into view
   useEffect(() => {
     if (!activeLetter) return;
     const btn = document.getElementById("alpha-" + activeLetter);
     btn?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-  }, [activeLetter, letters]);  // eslint-disable-line react-hooks/exhaustive-deps
+  }, [activeLetter]);
+
+  useEffect(() => {
+    return () => { if (audioRef.current) audioRef.current.pause(); };
+  }, []);
 
   return (
     <div style={{ background:"#fff", minHeight:"100vh", fontFamily:"'Manrope',sans-serif", maxWidth:480, margin:"0 auto" }}>
       <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Manrope:wght@400;500;600&family=PT+Mono&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet" />
 
-      {/* HEADER */}
-      <div className="sticky-header" style={{ position:"sticky", top:0, zIndex:30 }}>
-      <header style={{ background:GRAD, padding:"24px 20px 28px", position:"relative", overflow:"hidden" }}>
-        <div style={{ position:"absolute", top:-60, right:-60, width:200, height:200, borderRadius:"50%", background:"rgba(255,255,255,0.05)", pointerEvents:"none" }} />
-        <div style={{ position:"absolute", bottom:-40, left:"10%", width:150, height:150, borderRadius:"50%", background:"rgba(255,255,255,0.03)", pointerEvents:"none" }} />
-        <div style={{ position:"relative", zIndex:1, display:"flex", alignItems:"flex-start", justifyContent:"space-between", marginBottom:12 }}>
-          <div>
-            <div style={{ fontFamily:"'PT Mono',monospace", fontSize:9, color:"rgba(255,255,255,0.5)", letterSpacing:".18em", textTransform:"uppercase", marginBottom:6 }}>The Modern Bengali Lexicon</div>
-            <h1 style={{ fontFamily:"'Outfit',sans-serif", fontSize:40, fontWeight:800, color:"#fff", letterSpacing:"-.03em", lineHeight:1, margin:0 }}>Tagorhythm</h1>
-            <div style={{ fontFamily:"'Hind Siliguri',sans-serif", fontSize:16, color:"rgba(255,255,255,0.75)", fontWeight:500, marginTop:4 }}>কথায় কথায় কবিগুরু</div>
-          </div>
-          <div style={{
-            fontFamily:"'Outfit',sans-serif", fontSize:20, fontWeight:800,
-            color:"#fff", letterSpacing:"-.04em", marginTop:6,
-            background:"rgba(255,255,255,0.15)", borderRadius:8,
-            padding:"4px 10px"
-          }}>hoichoi</div>
-        </div>
-        <p style={{ position:"relative", zIndex:1, fontFamily:"'Manrope',sans-serif", fontSize:12, color:"rgba(255,255,255,.5)", lineHeight:1.65, margin:0 }}>
-          Because Tagore described every modern feeling 100 years before you had a word for it.
-        </p>
-      </header>
+      {/* STICKY WRAPPER — header + alpha nav together */}
+      <div ref={stickyRef} style={{ position:"sticky", top:0, zIndex:30 }}>
 
-      {/* ALPHA NAV */}
-      <div style={{
-        position:"sticky", top:0, zIndex:19, background:"#fff",
-        borderBottom:"1px solid #f0f0f0", overflowX:"auto", whiteSpace:"nowrap",
-        scrollbarWidth:"none", WebkitOverflowScrolling:"touch",
-      }}>
-        <div style={{ display:"inline-flex", padding:"0 8px" }}>
-          {ALL_LETTERS.map(l => (
-            <button
-              key={l}
-              id={"alpha-" + l}
-              onClick={() => {
-                if (!groups[l]) return;
-                const el = document.getElementById("section-" + l);
-                if (!el) return;
-                const headerHeight = document.querySelector('.sticky-header')?.offsetHeight || 0;
-                const top = el.getBoundingClientRect().top + window.scrollY - headerHeight - 8;
-                window.scrollTo({ top, behavior: "smooth" });
-              }}
-              style={{
-                display:"inline-flex", alignItems:"center", justifyContent:"center",
-                minWidth:34, height:40, padding:"0 3px",
-                fontFamily:"'Outfit',sans-serif", fontSize:12, fontWeight:700,
-                color: activeLetter === l ? "#d20820" : groups[l] ? "#bbb" : "#e8e8e8",
-                background:"none", border:"none",
-                cursor: groups[l] ? "pointer" : "default",
-                position:"relative", flexShrink:0,
-                borderBottom: activeLetter === l ? "2px solid #d20820" : "2px solid transparent",
-              }}
-            >{l}</button>
-          ))}
+        {/* HEADER */}
+        <header style={{ background:GRAD, padding:"20px 20px 22px", position:"relative", overflow:"hidden" }}>
+          <div style={{ position:"absolute", top:-60, right:-60, width:200, height:200, borderRadius:"50%", background:"rgba(255,255,255,0.05)", pointerEvents:"none" }} />
+          <div style={{ position:"absolute", bottom:-40, left:"10%", width:150, height:150, borderRadius:"50%", background:"rgba(255,255,255,0.03)", pointerEvents:"none" }} />
+          <div style={{ position:"relative", zIndex:1, display:"flex", alignItems:"flex-start", justifyContent:"space-between" }}>
+            <div>
+              <div style={{ fontFamily:"'PT Mono',monospace", fontSize:9, color:"rgba(255,255,255,0.5)", letterSpacing:".18em", textTransform:"uppercase", marginBottom:4 }}>The Modern Bengali Lexicon</div>
+              <h1 style={{ fontFamily:"'Outfit',sans-serif", fontSize:36, fontWeight:800, color:"#fff", letterSpacing:"-.03em", lineHeight:1, margin:0 }}>Tagorhythm</h1>
+              <div style={{ fontFamily:"'Hind Siliguri',sans-serif", fontSize:15, color:"rgba(255,255,255,0.75)", fontWeight:500, marginTop:3 }}>কথায় কথায় কবিগুরু</div>
+            </div>
+            <div style={{
+              fontFamily:"'Outfit',sans-serif", fontSize:18, fontWeight:800,
+              color:"#fff", letterSpacing:"-.04em", marginTop:4,
+              background:"rgba(255,255,255,0.15)", borderRadius:8,
+              padding:"4px 10px", flexShrink:0
+            }}>hoichoi</div>
+          </div>
+        </header>
+
+        {/* ALPHA NAV */}
+        <div style={{
+          background:"#fff",
+          borderBottom:"1px solid #f0f0f0",
+          overflowX:"auto", whiteSpace:"nowrap",
+          scrollbarWidth:"none", WebkitOverflowScrolling:"touch",
+        }}>
+          <style>{`::-webkit-scrollbar{display:none}`}</style>
+          <div style={{ display:"inline-flex", padding:"0 8px" }}>
+            {ALL_LETTERS.map(l => (
+              <button
+                key={l}
+                id={"alpha-" + l}
+                disabled={!groups[l]}
+                onClick={() => groups[l] && scrollToLetter(l)}
+                style={{
+                  display:"inline-flex", alignItems:"center", justifyContent:"center",
+                  minWidth:34, height:40, padding:"0 2px",
+                  fontFamily:"'Outfit',sans-serif", fontSize:12, fontWeight:700,
+                  color: activeLetter === l ? "#d20820" : groups[l] ? "#aaa" : "#e0e0e0",
+                  background:"none", border:"none",
+                  cursor: groups[l] ? "pointer" : "default",
+                  position:"relative", flexShrink:0,
+                  transition:"color .15s",
+                  borderBottom: activeLetter === l ? "2.5px solid #d20820" : "2.5px solid transparent",
+                }}
+              >{l}</button>
+            ))}
+          </div>
         </div>
-      </div>
-      </div>
+
+      </div>{/* end sticky wrapper */}
 
       {/* ENTRIES */}
       <main style={{ padding:"0 16px 40px" }}>
         {letters.map(letter => (
-          <div key={letter} id={"section-" + letter} style={{ marginTop:28 }}>
+          <div key={letter} id={"section-" + letter} style={{ marginTop:24 }}>
             <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:4 }}>
               <span style={{ fontFamily:"'Outfit',sans-serif", fontSize:11, fontWeight:700, color:"#ccc", letterSpacing:".15em" }}>{letter}</span>
               <div style={{ height:1, flex:1, background:"#f0f0f0" }} />
@@ -242,21 +256,14 @@ export default function Tagorhythm() {
       </main>
 
       {/* FOOTER */}
-      <footer style={{ background:GRAD, padding:"24px 20px 24px", position:"relative", overflow:"hidden" }}>
+      <footer style={{ background:GRAD, padding:"24px 20px", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", top:-60, right:-60, width:200, height:200, borderRadius:"50%", background:"rgba(255,255,255,0.04)", pointerEvents:"none" }} />
         <div style={{ position:"absolute", bottom:-40, left:-20, width:160, height:160, borderRadius:"50%", background:"rgba(255,255,255,0.03)", pointerEvents:"none" }} />
         <div style={{ position:"relative", zIndex:1, display:"flex", alignItems:"center", gap:20 }}>
-          {/* Left: Boldly Bangali logo */}
           <div style={{ flexShrink:0 }}>
-            <img
-                src="/boldly-bangali.png"
-                alt="Boldly Bangali"
-                style={{ height:72, width:"auto", display:"block", mixBlendMode:"screen" }}
-              />
+            <img src="/boldly-bangali.png" alt="Boldly Bangali" style={{ height:72, width:"auto", display:"block", mixBlendMode:"screen" }} />
           </div>
-          {/* Vertical divider */}
           <div style={{ width:1, background:"rgba(255,255,255,0.2)", alignSelf:"stretch", flexShrink:0 }} />
-          {/* Right: find us on + icons */}
           <div style={{ flex:1, display:"flex", flexDirection:"column", gap:10 }}>
             <div style={{ fontFamily:"'PT Mono',monospace", fontSize:9, color:"rgba(255,255,255,0.5)", letterSpacing:".18em", textTransform:"uppercase" }}>Find us on</div>
             <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
